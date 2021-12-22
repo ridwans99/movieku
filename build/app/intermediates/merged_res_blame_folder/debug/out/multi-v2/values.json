@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "D:\\flutter\\movieapp-master\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values\\values.xml",
+            "outputFile": "D:\\flutter\\movieku\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values\\values.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Ridwan\\.gradle\\caches\\transforms-2\\files-2.1\\93b67ce77e3018bae7dcfb3d9df971c2\\jetified-appcompat-resources-1.2.0\\res\\values\\values.xml",
@@ -61,26 +61,7 @@
                     }
                 },
                 {
-                    "source": "D:\\flutter\\movieapp-master\\build\\flutter_inappwebview\\intermediates\\packaged_res\\debug\\values\\values.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,11,14",
-                        "startColumns": "4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,102,153,210,259,306,353,426,502",
-                        "endLines": "2,3,4,5,6,7,10,13,21",
-                        "endColumns": "46,50,56,48,46,46,12,12,12",
-                        "endOffsets": "97,148,205,254,301,348,421,497,949"
-                    },
-                    "to": {
-                        "startLines": "286,287,288,289,290,295,303,1372,1713",
-                        "startColumns": "4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "18735,18782,18833,18890,18939,19269,19882,88753,115019",
-                        "endLines": "286,287,288,289,290,295,305,1374,1720",
-                        "endColumns": "46,50,56,48,46,46,12,12,12",
-                        "endOffsets": "18777,18828,18885,18934,18981,19311,19950,88824,115466"
-                    }
-                },
-                {
-                    "source": "D:\\flutter\\movieapp-master\\android\\app\\src\\main\\res\\values\\styles.xml",
+                    "source": "D:\\flutter\\movieku\\android\\app\\src\\main\\res\\values\\styles.xml",
                     "from": {
                         "startLines": "3,14",
                         "startColumns": "4,4",
@@ -113,6 +94,25 @@
                         "startOffsets": "1977,2035,2101,2164,10544,10615,18986,19054,19121,19200",
                         "endColumns": "57,65,62,61,70,71,67,66,78,68",
                         "endOffsets": "2030,2096,2159,2221,10610,10682,19049,19116,19195,19264"
+                    }
+                },
+                {
+                    "source": "D:\\flutter\\movieku\\build\\flutter_inappwebview\\intermediates\\packaged_res\\debug\\values\\values.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,11,14",
+                        "startColumns": "4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,102,153,210,259,306,353,426,502",
+                        "endLines": "2,3,4,5,6,7,10,13,21",
+                        "endColumns": "46,50,56,48,46,46,12,12,12",
+                        "endOffsets": "97,148,205,254,301,348,421,497,949"
+                    },
+                    "to": {
+                        "startLines": "286,287,288,289,290,295,303,1372,1713",
+                        "startColumns": "4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "18735,18782,18833,18890,18939,19269,19882,88753,115019",
+                        "endLines": "286,287,288,289,290,295,305,1374,1720",
+                        "endColumns": "46,50,56,48,46,46,12,12,12",
+                        "endOffsets": "18777,18828,18885,18934,18981,19311,19950,88824,115466"
                     }
                 },
                 {
