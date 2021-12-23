@@ -2,8 +2,10 @@ import 'dart:ui';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:get/get.dart';
 import 'package:movieapp/bloc/get_movie_videos_bloc.dart';
-import 'package:movieapp/database/db.dart';
+import 'package:movieapp/components/bottom_navbar.dart';
+import 'package:movieapp/config/app_data.dart';
 import 'package:movieapp/model/movie.dart';
 import 'package:movieapp/model/video.dart';
 import 'package:movieapp/model/video_response.dart';
@@ -27,27 +29,32 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   final Movie movie;
   _MovieDetailScreenState(this.movie);
 
-  List<Movie> moviemodel = [];
+  List<Movie> moviemodel = AppData.movieList ?? <Movie>[];
 
   bool isBookmarked = false;
 
   addMovie(Movie movie) async {
-    DB().insertMovie(movie as Movie).then((value) => print(value));
+    moviemodel.add(movie);
+    AppData.movieList = moviemodel;
+    setState(() {});
   }
 
   deleteMovie(int id) async {
-    DB().deleteWhereIdMovie(id).then((value) => print(value));
+    moviemodel.removeWhere((element) => element.id == id);
+    AppData.movieList = moviemodel;
+    setState(() {});
   }
 
   cekMovie() async {
-    bool isExist = await DB().cekmovie(widget.movie.id);
-    isBookmarked = isExist;
+    var isExist = moviemodel.firstWhere((element) => element.id == movie.id);
+    isBookmarked = isExist != null;
     setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
+    cekMovie();
     movieVideosBloc..getMovieVideos(movie.id);
   }
 
@@ -59,188 +66,194 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Style.Colors.mainColor,
-      body: new Builder(
-        builder: (context) {
-          return new SliverFab(
-            floatingPosition: FloatingPosition(right: 20),
-            floatingWidget: StreamBuilder<VideoResponse>(
-              stream: movieVideosBloc.subject.stream,
-              builder: (context, AsyncSnapshot<VideoResponse> snapshot) {
-                if (snapshot.hasData) {
-                  if (snapshot.data.error != null &&
-                      snapshot.data.error.length > 0) {
-                    return _buildErrorWidget(snapshot.data.error);
+    return WillPopScope(
+      onWillPop: () {
+        Get.offAll(Bottom_Navbar());
+      },
+      child: Scaffold(
+        backgroundColor: Style.Colors.mainColor,
+        body: new Builder(
+          builder: (context) {
+            return new SliverFab(
+              floatingPosition: FloatingPosition(right: 20),
+              floatingWidget: StreamBuilder<VideoResponse>(
+                stream: movieVideosBloc.subject.stream,
+                builder: (context, AsyncSnapshot<VideoResponse> snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data.error != null &&
+                        snapshot.data.error.length > 0) {
+                      return _buildErrorWidget(snapshot.data.error);
+                    }
+                    return _buildVideoWidget(snapshot.data);
+                  } else if (snapshot.hasError) {
+                    return _buildErrorWidget(snapshot.error);
+                  } else {
+                    return _buildLoadingWidget();
                   }
-                  return _buildVideoWidget(snapshot.data);
-                } else if (snapshot.hasError) {
-                  return _buildErrorWidget(snapshot.error);
-                } else {
-                  return _buildLoadingWidget();
-                }
-              },
-            ),
-            expandedHeight: 200.0,
-            slivers: <Widget>[
-              new SliverAppBar(
-                backgroundColor: Style.Colors.mainColor,
-                expandedHeight: 200.0,
-                pinned: true,
-                flexibleSpace: new FlexibleSpaceBar(
-                    title: Text(
-                      movie.title.length > 40
-                          ? movie.title.substring(0, 37) + "..."
-                          : movie.title,
-                      style: TextStyle(
-                          fontSize: 12.0, fontWeight: FontWeight.normal),
-                    ),
-                    background: Stack(
-                      children: <Widget>[
-                        Container(
-                          decoration: new BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            image: new DecorationImage(
-                                fit: BoxFit.cover,
-                                image: NetworkImage(
-                                    "https://image.tmdb.org/t/p/original/" +
-                                        movie.backPoster)),
-                          ),
-                          child: new Container(
-                            decoration: new BoxDecoration(
-                                color: Colors.black.withOpacity(0.5)),
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.bottomCenter,
-                                end: Alignment.topCenter,
-                                stops: [
-                                  0.1,
-                                  0.9
-                                ],
-                                colors: [
-                                  Colors.black.withOpacity(0.9),
-                                  Colors.black.withOpacity(0.0)
-                                ]),
-                          ),
-                        ),
-                      ],
-                    )),
+                },
               ),
-              SliverPadding(
-                  padding: EdgeInsets.all(0.0),
-                  sliver: SliverList(
-                      delegate: SliverChildListDelegate([
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0, top: 20.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            movie.rating.toString(),
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            width: 5.0,
-                          ),
-                          RatingBar(
-                            itemSize: 10.0,
-                            initialRating: movie.rating / 2,
-                            ratingWidget: RatingWidget(
-                              empty: Icon(
-                                EvaIcons.star,
-                                color: Style.Colors.secondColor,
-                              ),
-                              full: Icon(
-                                EvaIcons.star,
-                                color: Style.Colors.secondColor,
-                              ),
-                              half: Icon(
-                                EvaIcons.star,
-                                color: Style.Colors.secondColor,
-                              ),
-                            ),
-                            minRating: 1,
-                            direction: Axis.horizontal,
-                            allowHalfRating: true,
-                            itemCount: 5,
-                            itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
-                            onRatingUpdate: (rating) {
-                              print(rating);
-                            },
-                          )
-                        ],
+              expandedHeight: 200.0,
+              slivers: <Widget>[
+                new SliverAppBar(
+                  backgroundColor: Style.Colors.mainColor,
+                  expandedHeight: 200.0,
+                  pinned: true,
+                  flexibleSpace: new FlexibleSpaceBar(
+                      title: Text(
+                        movie.title.length > 40
+                            ? movie.title.substring(0, 37) + "..."
+                            : movie.title,
+                        style: TextStyle(
+                            fontSize: 12.0, fontWeight: FontWeight.normal),
                       ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            IconButton(
-                              icon: Icon(
-                                isBookmarked
-                                    ? Icons.bookmark
-                                    : Icons.bookmark_outline,
-                                color: Colors.black,
-                                size: 30,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  isBookmarked = !isBookmarked;
-                                });
-                                if (isBookmarked) {
-                                  addMovie(widget.movie);
-                                } else {
-                                  deleteMovie(widget.movie.id);
-                                }
-                              },
+                      background: Stack(
+                        children: <Widget>[
+                          Container(
+                            decoration: new BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              image: new DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage(
+                                      "https://image.tmdb.org/t/p/original/" +
+                                          movie.backPoster)),
                             ),
+                            child: new Container(
+                              decoration: new BoxDecoration(
+                                  color: Colors.black.withOpacity(0.5)),
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                  begin: Alignment.bottomCenter,
+                                  end: Alignment.topCenter,
+                                  stops: [
+                                    0.1,
+                                    0.9
+                                  ],
+                                  colors: [
+                                    Colors.black.withOpacity(0.9),
+                                    Colors.black.withOpacity(0.0)
+                                  ]),
+                            ),
+                          ),
+                        ],
+                      )),
+                ),
+                SliverPadding(
+                    padding: EdgeInsets.all(0.0),
+                    sliver: SliverList(
+                        delegate: SliverChildListDelegate([
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0, top: 20.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              movie.rating.toString(),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              width: 5.0,
+                            ),
+                            RatingBar(
+                              itemSize: 10.0,
+                              initialRating: movie.rating / 2,
+                              ratingWidget: RatingWidget(
+                                empty: Icon(
+                                  EvaIcons.star,
+                                  color: Style.Colors.secondColor,
+                                ),
+                                full: Icon(
+                                  EvaIcons.star,
+                                  color: Style.Colors.secondColor,
+                                ),
+                                half: Icon(
+                                  EvaIcons.star,
+                                  color: Style.Colors.secondColor,
+                                ),
+                              ),
+                              minRating: 1,
+                              direction: Axis.horizontal,
+                              allowHalfRating: true,
+                              itemCount: 5,
+                              itemPadding:
+                                  EdgeInsets.symmetric(horizontal: 2.0),
+                              onRatingUpdate: (rating) {
+                                print(rating);
+                              },
+                            )
                           ],
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0, top: 20.0),
-                      child: Text(
-                        "OVERVIEW",
-                        style: TextStyle(
-                            color: Style.Colors.thirdColor,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14.0),
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              IconButton(
+                                icon: Icon(
+                                  isBookmarked
+                                      ? Icons.bookmark
+                                      : Icons.bookmark_outline,
+                                  color: Colors.black,
+                                  size: 30,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    isBookmarked = !isBookmarked;
+                                  });
+                                  if (isBookmarked) {
+                                    addMovie(widget.movie);
+                                  } else {
+                                    deleteMovie(widget.movie.id);
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        movie.overview,
-                        style: TextStyle(
-                            color: Colors.white, fontSize: 12.0, height: 1.5),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0, top: 20.0),
+                        child: Text(
+                          "OVERVIEW",
+                          style: TextStyle(
+                              color: Style.Colors.thirdColor,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14.0),
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    MovieInfo(
-                      id: movie.id,
-                    ),
-                    Casts(
-                      id: movie.id,
-                    ),
-                    SimilarMovies(id: movie.id)
-                  ])))
-            ],
-          );
-        },
+                      SizedBox(
+                        height: 5.0,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          movie.overview,
+                          style: TextStyle(
+                              color: Colors.white, fontSize: 12.0, height: 1.5),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      MovieInfo(
+                        id: movie.id,
+                      ),
+                      Casts(
+                        id: movie.id,
+                      ),
+                      SimilarMovies(id: movie.id)
+                    ])))
+              ],
+            );
+          },
+        ),
       ),
     );
   }

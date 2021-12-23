@@ -4,6 +4,23 @@
             "outputFile": "D:\\flutter\\movieku\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-en-rXC\\values-en-rXC.xml",
             "map": [
                 {
+                    "source": "C:\\Users\\Ridwan\\.gradle\\caches\\transforms-2\\files-2.1\\347814567c8fb3becfdf858e9729d475\\core-1.5.0\\res\\values-en-rXC\\values-en-rXC.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "203",
+                        "endOffsets": "254"
+                    },
+                    "to": {
+                        "startLines": "34",
+                        "startColumns": "4",
+                        "startOffsets": "6526",
+                        "endColumns": "203",
+                        "endOffsets": "6725"
+                    }
+                },
+                {
                     "source": "C:\\Users\\Ridwan\\.gradle\\caches\\transforms-2\\files-2.1\\48739ba133da941fe41eab37ffb928ef\\browser-1.3.0\\res\\values-en-rXC\\values-en-rXC.xml",
                     "from": {
                         "startLines": "2,3,4,5",
@@ -18,23 +35,6 @@
                         "startOffsets": "5528,5728,5927,6138",
                         "endColumns": "199,198,210,201",
                         "endOffsets": "5723,5922,6133,6335"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Ridwan\\.gradle\\caches\\transforms-2\\files-2.1\\a69d6fcd21e670073cd9cab171299398\\core-1.3.0\\res\\values-en-rXC\\values-en-rXC.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "203",
-                        "endOffsets": "254"
-                    },
-                    "to": {
-                        "startLines": "34",
-                        "startColumns": "4",
-                        "startOffsets": "6526",
-                        "endColumns": "203",
-                        "endOffsets": "6725"
                     }
                 },
                 {

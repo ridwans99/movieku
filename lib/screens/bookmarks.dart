@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:movieapp/database/db.dart';
+import 'package:movieapp/config/app_data.dart';
 import 'package:movieapp/model/movie.dart';
 import 'package:get/get.dart';
 import 'package:movieapp/screens/detail_screen.dart';
@@ -13,21 +13,12 @@ class Bookmarks extends StatefulWidget {
 }
 
 class _Bookmarks extends State<Bookmarks> {
-  List<Movie> moviemodel = [];
+  List<Movie> moviemodel = AppData.movieList ?? <Movie>[];
 
 // meengambil data di sqflite untuk bookmark
-  getData() async {
-    moviemodel.clear();
-    var list = await DB().getAllMovie();
-    list.forEach((element) {
-      moviemodel.add(element as Movie);
-    });
-    setState(() {});
-  }
 
   @override
   void initState() {
-    getData();
     super.initState();
   }
 
@@ -100,20 +91,37 @@ class _Bookmarks extends State<Bookmarks> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       children: <Widget>[
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              color: Colors.brown[200],
-                                              borderRadius:
-                                                  BorderRadius.circular(5)),
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 10.0, vertical: 5.0),
-                                          width: 70,
-                                          height: 70,
-                                          child: Icon(
-                                            Icons.description_rounded,
-                                            size: 35,
-                                          ),
+                                        Hero(
+                                          tag: movie.id,
+                                          child: Container(
+                                              width: 70,
+                                              height: 70,
+                                              decoration: new BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(2.0)),
+                                                shape: BoxShape.rectangle,
+                                                image: new DecorationImage(
+                                                    fit: BoxFit.cover,
+                                                    image: NetworkImage(
+                                                        "https://image.tmdb.org/t/p/w200/" +
+                                                            movie.poster)),
+                                              )),
                                         ),
+                                        // children: <Widget>[
+                                        //   Container(
+                                        //     decoration: BoxDecoration(
+                                        //         color: Colors.brown[200],
+                                        //         borderRadius:
+                                        //             BorderRadius.circular(5)),
+                                        //     padding: EdgeInsets.symmetric(
+                                        //         horizontal: 10.0, vertical: 5.0),
+                                        //     width: 70,
+                                        //     height: 70,
+                                        //     child: Icon(
+                                        //       Icons.play_arrow_outlined,
+                                        //       size: 35,
+                                        //     ),
+                                        //   ),
                                         SizedBox(
                                           width: 6.0,
                                         ),
@@ -138,12 +146,6 @@ class _Bookmarks extends State<Bookmarks> {
                                           ),
                                         )
                                       ],
-                                    ),
-                                    Container(
-                                      alignment: Alignment.center,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 10.0, vertical: 10.0),
-                                      child: Icon(Icons.download),
                                     ),
                                   ],
                                 ),

@@ -69,7 +69,6 @@ class _ProfileScreen extends State<ProfileScreen> {
                 onPressed: () async {
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => Login()));
-                  // PostModel.publish(controllerJudul.text, isi);
                 },
                 // onPressed: () {},
                 icon: Icon(Icons.exit_to_app),
