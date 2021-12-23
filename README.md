@@ -22,7 +22,6 @@ Rest Request
 ![Screenshot 3](https://github.com/mekas/mb1313600022/blob/master/1313618016/detail.PNG)
 ![Screenshot 4](https://github.com/mekas/mb1313600022/blob/master/1313618016/bookmark.PNG)
 ![Screenshot 5](https://github.com/mekas/mb1313600022/blob/master/1313618016/profil.PNG)
-I want to make an app that will show movie trailers, movie details and add bookmarks
 
 ## API 
 [API](https://www.themoviedb.org)
